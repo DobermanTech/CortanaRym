@@ -118,10 +118,10 @@ def player_turn(player_instance, my_adventure, opponent, current_weapon):
         print(f'You defeated {opponent.name}!')
         player_instance.gain_exp(opponent.xp)
         random_money_gained = random.randint(0,2)
-        leveled_money_gained = random.randint(0, opponent.min_level)
+        leveled_money_gained = (random.randint(0, opponent.min_level))*2
         money_gained = random_money_gained + leveled_money_gained
         player_instance.coinpurse += money_gained
-        print(f'You found {money_gained} bringing your total to {player_instance.coinpurse}')
+        print(f'You found {money_gained} Gold.')
         player_instance.display_status()
         return "victory"
 def effects(player_instance, my_adventure, opponent):

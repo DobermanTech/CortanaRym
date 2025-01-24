@@ -15,8 +15,13 @@ def draw_weapon_bag(player_weapon_bag, screen, bagimage_size, weapon_dict, playe
     images = []
     weapon_positions = []  # Store positions and names of weapons
     weapon_image_folder = "images"
-    
+    backgroundimage = pygame.image.load('images/map icons/map background.png').convert_alpha()
+    backgroundimage = pygame.transform.scale(backgroundimage, (game_config.screen_width * 1.2, game_config.screen_height * 1.2))
+    screen.fill('gray')
+    screen.blit(backgroundimage, ((-0.1*game_config.screen_width), (-.1*game_config.screen_height)))
+    vertical_offset = 100  # Adjust this value to move weapons lower down the page
     for idx, weapon_instance in enumerate(player_weapon_bag):
+        
         # print(weapon_instance)
         try:
             weapon_name = weapon_instance.name  # Access the name attribute directly
@@ -30,10 +35,10 @@ def draw_weapon_bag(player_weapon_bag, screen, bagimage_size, weapon_dict, playe
             scaled_image = pygame.transform.scale(image, bagimage_size)  # Rescale the image
             images.append(scaled_image)
 
-            row = idx // 4
-            col = idx % 4
-            x = col * (bagimage_size[0] + 50) + (game_config.screen_width/5)  # Adjust spacing between images
-            y = row * (bagimage_size[1] + 75) + 50  # Adjust spacing between images
+            row = idx // 5
+            col = idx % 5
+            x = col * (bagimage_size[0] + 30) + (game_config.screen_width/5)  # Adjust spacing between images
+            y = row * (bagimage_size[1] + 80) + vertical_offset  # Adjust spacing between images
             weapon_positions.append({"rect": pygame.Rect(x, y, bagimage_size[0], bagimage_size[1]), "instance": weapon_instance, "name": weapon_name})
             # print(f"weapon image loaded:{weapon_name}")       
         
@@ -64,7 +69,9 @@ def draw_weapon_bag(player_weapon_bag, screen, bagimage_size, weapon_dict, playe
         text = small_font.render(f"Damage: {weapon['min_damage']}-{weapon['max_damage']}", True, BLACK)
         screen.blit(text, (x, y + bagimage_size[1] + 30))
         text = small_font.render(f"Hit Chance: {weapon['hitChance']}", True, BLACK)
-        screen.blit(text, (x, y + bagimage_size[1] + 50))
+        screen.blit(text, (x, y + bagimage_size[1] + 45))
+        text = small_font.render(f"{weapon['weapon_type']}", True, BLACK)
+        screen.blit(text, (x, y + bagimage_size[1] + 60))
 
 
     return weapon_positions, images

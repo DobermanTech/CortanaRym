@@ -35,8 +35,6 @@ def custom_print(*args, **kwargs):
 original_print = print
 print = custom_print
 
-
-
 def determine_enemy(player_pos, terrain, encounter_chance, level):
     # print(terrain["type"])
     
@@ -135,7 +133,6 @@ def map_dimensions(screen_width, screen_height, region_x, region_y):
     print(gridXsize, gridYsize)
     GRID_SIZE = (gridXsize, gridYsize)
 
-
 # Update function to handle player movement
 def update_player_position(player_pos, new_x, new_y, visited_grids, unique_locations, region_x, region_y):
     # Update player position if move is within bounds
@@ -215,13 +212,11 @@ class Adventure:
         
 
     def draw_adventure(self, screen, adventure_buttons, visited_grids, player_pos):
-        # Draw the adventure screen
-#draw the player
-        adv_player_image = pygame.transform.scale(game_config.player_image, (game_config.screen_width/7, game_config.screen_height/3))
-        player_xy = game_config.screen_width/5, game_config.screen_height/3
-        player_rect = game_config.player_image.get_rect(topleft = player_xy)
 
-#Good down
+#draw the player
+        # adv_player_image = pygame.transform.scale(game_config.player_image, (game_config.screen_width/7, game_config.screen_height/3))
+        # player_xy = game_config.screen_width/5, game_config.screen_height/3
+        # player_rect = game_config.player_image.get_rect(topleft = player_xy)
 
 # Draw the new background
         local_terrain = self.visited_grids[tuple(self.player_pos)]["type"]
@@ -229,8 +224,21 @@ class Adventure:
             env_image = visited_grids[tuple(player_pos)]["background"]
             image_path = os.path.join("images", "landscape", local_terrain, env_image)
             background_image = pygame.image.load(image_path).convert_alpha()
+            width, height = background_image.get_size()
+            # print(f'Initial Size; {width} x {height}')
+            counter = 0
+            while width > (game_config.screen_width*1.2):
+                width, height = background_image.get_size()
+                background_image = pygame.transform.scale(background_image, (int(width*0.9), int(height*0.9)))
+                width, height = background_image.get_size()
+                counter +=1
+                # print(f'shrinking the background - Round {counter}. {width} x {height}')
+
+
+
+
             game_config.screen.blit(background_image, (0, 0))
-            game_config.screen.blit(adv_player_image, player_rect.topleft)
+            # game_config.screen.blit(adv_player_image, player_rect.topleft)
         except FileNotFoundError as e:
             print(f'FileNotFoundError: {e}')
         except pygame.error as e:
@@ -312,7 +320,12 @@ def draw_map(player_pos, visited_grids, screen, screen_width, screen_height, GRI
 
     # Draw the player
     player_rect = pygame.Rect(player_pos[0] * GRID_SIZE + GRID_REGION_TOP_LEFT[0], player_pos[1] * GRID_SIZE + GRID_REGION_TOP_LEFT[1], GRID_SIZE, GRID_SIZE)
-    pygame.draw.rect(screen, (0, 0, 0), player_rect)
+    # pygame.draw.rect(screen, (0, 0, 0), player_rect)
+    map_player_image = pygame.transform.scale(game_config.player_image, (GRID_SIZE, GRID_SIZE))
+    player_xy = game_config.screen_width/5, game_config.screen_height/3
+    game_config.screen.blit(map_player_image, player_rect.topleft)
+
+
 
     # #draw the bag close button
     # for button in game_config.map_buttons:

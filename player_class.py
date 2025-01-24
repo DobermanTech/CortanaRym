@@ -113,7 +113,12 @@ class Player:
             # print("You missed the target!")
             return 0
     def draw_player_stats(self, screen, screen_width, screen_height):
+        
         screen.fill((0, 0, 40))  # Dark blue background
+        backgroundimage = pygame.image.load('images/map icons/map background.png').convert_alpha()
+        backgroundimage = pygame.transform.scale(backgroundimage, (game_config.screen_width * 1.2, game_config.screen_height * 1.2))
+        screen.blit(backgroundimage, ((-0.1*game_config.screen_width), (-.1*game_config.screen_height)))
+
         y_offset = screen_height / 5
         x_offset = screen_width / 4
         x_pos = 1
@@ -127,18 +132,18 @@ class Player:
             text_rect = text.get_rect(center=(x_offset + box_width // 2, y_offset + box_height // 2))
             box_rect = pygame.Rect(x_offset, y_offset, box_width, box_height)
             
-            pygame.draw.rect(screen, game_config.WHITE, box_rect)  # Draw the fixed size box
+            pygame.draw.rect(screen, game_config.lighttan, box_rect)  # Draw the fixed size box
             screen.blit(text, text_rect)  # Blit the text in the center of the box
             current_xp = self.skill_xp.get(skill, 0) # Calculate progress
             xp_to_next_level = (self.skills[skill] ** 1.5) * 20
             progress = current_xp / xp_to_next_level if xp_to_next_level > 0 else 0
             progress_bar_rect = pygame.Rect(        # Draw progress bar
                 x_offset,
-                y_offset + box_height + 5,
+                y_offset + box_height,
                 int(box_width * progress),
                 progress_bar_height
             )
-            pygame.draw.rect(screen, game_config.BLACK, (x_offset, y_offset + box_height + 5, box_width, progress_bar_height))  # Background bar
+            pygame.draw.rect(screen, game_config.lighttan, (x_offset, y_offset + box_height, box_width, progress_bar_height))  # Background bar
             pygame.draw.rect(screen, game_config.GREEN, progress_bar_rect)  # Progress bar
             x_offset += box_width + 20  # Move to the next box position
             x_pos += 1
