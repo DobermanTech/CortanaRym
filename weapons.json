@@ -1,0 +1,335 @@
+{
+    "fists": {
+        "hitChance": 50,
+        "min_damage": 1,
+        "max_damage": 3,
+        "value": 0,
+        "min_level": 0,
+        "probability": 0.1,
+        "weapon_type": "blunt"
+    },
+    "small rock": {
+        "hitChance": 90,
+        "min_damage": 1,
+        "max_damage": 2,
+        "value": 1,
+        "min_level": 0,
+        "probability": 3,
+        "weapon_type": "ranged"
+    },
+    "rather large rock": {
+        "hitChance": 60,
+        "min_damage": 5,
+        "max_damage": 12,
+        "value": 1,
+        "min_level": 0,
+        "probability": 1,
+        "weapon_type": "blunt"
+    },
+    "pointy stick": {
+        "hitChance": 75,
+        "min_damage": 3,
+        "max_damage": 4,
+        "value": 1,
+        "min_level": 1,
+        "probability": 1.5,
+        "weapon_type": "short blade"
+    },
+    "sword": {
+        "hitChance": 80,
+        "min_damage": 4,
+        "max_damage": 8,
+        "value": 5,
+        "min_level": 3,
+        "probability": 4,
+        "weapon_type": "long blade"
+    },
+    "shortbow": {
+        "hitChance": 65,
+        "min_damage": 5,
+        "max_damage": 20,
+        "value": 5,
+        "min_level": 4,
+        "probability": 3.5,
+        "weapon_type": "ranged"
+    },
+    "rocket launcher": {
+        "hitChance": 100,
+        "min_damage": 100,
+        "max_damage": 200,
+        "value": 250,
+        "min_level": 30,
+        "probability": 0.2,
+        "weapon_type": "ranged"
+    },
+    "dagger": {
+        "hitChance": 85,
+        "min_damage": 3,
+        "max_damage": 6,
+        "value": 3,
+        "min_level": 2,
+        "probability": 3,
+        "weapon_type": "short blade"
+    },
+    "longsword": {
+        "hitChance": 70,
+        "min_damage": 7,
+        "max_damage": 12,
+        "value": 15,
+        "min_level": 5,
+        "probability": 2.5,
+        "weapon_type": "long blade"
+    },
+    "crossbow": {
+        "hitChance": 60,
+        "min_damage": 10,
+        "max_damage": 18,
+        "value": 20,
+        "min_level": 6,
+        "probability": 1.8,
+        "weapon_type": "ranged"
+    },
+    "warhammer": {
+        "hitChance": 50,
+        "min_damage": 8,
+        "max_damage": 15,
+        "value": 12,
+        "min_level": 5,
+        "probability": 2.2,
+        "weapon_type": "blunt"
+    },
+    "battleaxe": {
+        "hitChance": 55,
+        "min_damage": 10,
+        "max_damage": 20,
+        "value": 18,
+        "min_level": 8,
+        "probability": 1.7,
+        "weapon_type": "choppers"
+    },
+    "mace": {
+        "hitChance": 65,
+        "min_damage": 6,
+        "max_damage": 10,
+        "value": 8,
+        "min_level": 3,
+        "probability": 3.8,
+        "weapon_type": "blunt"
+    },
+    "spear": {
+        "hitChance": 80,
+        "min_damage": 5,
+        "max_damage": 9,
+        "value": 7,
+        "min_level": 4,
+        "probability": 3.2,
+        "weapon_type": "polearms"
+    },
+    "halberd": {
+        "hitChance": 60,
+        "min_damage": 8,
+        "max_damage": 13,
+        "value": 10,
+        "min_level": 5,
+        "probability": 2.9,
+        "weapon_type": "polearms"
+    },
+    "rapier": {
+        "hitChance": 90,
+        "min_damage": 4,
+        "max_damage": 7,
+        "value": 6,
+        "min_level": 3,
+        "probability": 4.5,
+        "weapon_type": "short blade"
+    },
+    "greatsword": {
+        "hitChance": 40,
+        "min_damage": 15,
+        "max_damage": 25,
+        "value": 30,
+        "min_level": 12,
+        "probability": 0.9,
+        "weapon_type": "long blade"
+    },
+    "flamethrower": {
+        "hitChance": 70,
+        "min_damage": 20,
+        "max_damage": 30,
+        "value": 50,
+        "min_level": 10,
+        "probability": 1.2,
+        "weapon_type": "ranged"
+    },
+    "throwing knife": {
+        "hitChance": 75,
+        "min_damage": 2,
+        "max_damage": 5,
+        "value": 2,
+        "min_level": 1,
+        "probability": 3.5,
+        "weapon_type": "ranged"
+    },
+    "scythe": {
+        "hitChance": 50,
+        "min_damage": 12,
+        "max_damage": 18,
+        "value": 20,
+        "min_level": 8,
+        "probability": 1.3,
+        "weapon_type": "choppers"
+    },
+    "staff": {
+        "hitChance": 80,
+        "min_damage": 4,
+        "max_damage": 9,
+        "value": 5,
+        "min_level": 2,
+        "probability": 4,
+        "weapon_type": "blunt"
+    },
+    "wand": {
+        "hitChance": 85,
+        "min_damage": 3,
+        "max_damage": 7,
+        "value": 4,
+        "min_level": 2,
+        "probability": 3.9,
+        "weapon_type": "blunt"
+    },
+    "nunchaku": {
+        "hitChance": 70,
+        "min_damage": 5,
+        "max_damage": 10,
+        "value": 6,
+        "min_level": 3,
+        "probability": 2.8,
+        "weapon_type": "blunt"
+    },
+    "chakram": {
+        "hitChance": 75,
+        "min_damage": 4,
+        "max_damage": 8,
+        "value": 5,
+        "min_level": 2,
+        "probability": 3.4,
+        "weapon_type": "ranged"
+    },
+    "javelin": {
+        "hitChance": 60,
+        "min_damage": 5,
+        "max_damage": 10,
+        "value": 7,
+        "min_level": 3,
+        "probability": 3,
+        "weapon_type": "ranged"
+    },
+    "shuriken": {
+        "hitChance": 70,
+        "min_damage": 3,
+        "max_damage": 6,
+        "value": 2,
+        "min_level": 1,
+        "probability": 4.2,
+        "weapon_type": "ranged"
+    },
+    "morning star": {
+        "hitChance": 55,
+        "min_damage": 7,
+        "max_damage": 14,
+        "value": 10,
+        "min_level": 4,
+        "probability": 2.7,
+        "weapon_type": "blunt"
+    },
+    "katana": {
+        "hitChance": 75,
+        "min_damage": 6,
+        "max_damage": 12,
+        "value": 12,
+        "min_level": 5,
+        "probability": 3,
+        "weapon_type": "long blade"
+    },
+    "bo staff": {
+        "hitChance": 80,
+        "min_damage": 3,
+        "max_damage": 7,
+        "value": 4,
+        "min_level": 2,
+        "probability": 4,
+        "weapon_type": "polearms"
+    },
+    "blunderbuss": {
+        "hitChance": 40,
+        "min_damage": 15,
+        "max_damage": 30,
+        "value": 35,
+        "min_level": 10,
+        "probability": 0.7,
+        "weapon_type": "ranged"
+    },
+    "hand cannon": {
+        "hitChance": 45,
+        "min_damage": 12,
+        "max_damage": 25,
+        "value": 28,
+        "min_level": 9,
+        "probability": 1,
+        "weapon_type": "ranged"
+    },
+    "laser sword": {
+        "hitChance": 90,
+        "min_damage": 25,
+        "max_damage": 50,
+        "value": 100,
+        "min_level": 15,
+        "probability": 0.4,
+        "weapon_type": "long blade"
+    },
+    "plasma rifle": {
+        "hitChance": 85,
+        "min_damage": 20,
+        "max_damage": 40,
+        "value": 80,
+        "min_level": 12,
+        "probability": 0.6,
+        "weapon_type": "ranged"
+    },
+    "grappling hook": {
+        "hitChance": 60,
+        "min_damage": 5,
+        "max_damage": 15,
+        "value": 10,
+        "min_level": 4,
+        "probability": 2.3,
+        "weapon_type": "ranged"
+    },
+    "flail": {
+        "hitChance": 50,
+        "min_damage": 10,
+        "max_damage": 18,
+        "value": 15,
+        "min_level": 7,
+        "probability": 1.5,
+        "weapon_type": "blunt"
+    },
+    "blowgun": {
+        "hitChance": 85,
+        "min_damage": 2,
+        "max_damage": 4,
+        "value": 3,
+        "min_level": 1,
+        "probability": 4.5,
+        "weapon_type": "ranged"
+    },
+    "trident": {
+        "hitChance": 65,
+        "min_damage": 8,
+        "max_damage": 16,
+        "value": 20,
+        "min_level": 6,
+        "probability": 1.1,
+        "weapon_type": "polearms"
+    }
+}
