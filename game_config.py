@@ -21,6 +21,7 @@ yellow = (255,222,89)
 woodtan = (196, 155, 99)
 button_color = (90, 90, 40)
 font = pygame.font.Font(None, 32)
+BIG_font = pygame.font.Font(None, 84)
 small_font = pygame.font.Font(None, 24)
 menu_font = pygame.font.Font(None, 14)
 game_data = "game_data.txt" #WEAPONS ARE FROM JSONS
@@ -29,6 +30,13 @@ castle_photos = 'images/landscape/castle/'
 swamp_photos = 'images/landscape/swamp/'
 meadow_photos = 'images/landscape/forest/'
 town_gate_photos = "iamges/landscape/town"
+damage_hitsplat = "images/damage_hitsplat.png"
+hitsplat_image = pygame.image.load(damage_hitsplat)
+hitsplat_image = pygame.transform.scale(hitsplat_image, (screen_width/11, screen_height/11))
+small_splat_rect = hitsplat_image.get_rect()
+player_image_file = "images/player.png"
+player_image = pygame.image.load(player_image_file)
+
 
 GRID_SIZE = 64
 region_x, region_y = (15,15)
@@ -62,20 +70,16 @@ def check_and_install_packages(requirements_file='requirements.txt'):
 
 
 
-
+#I DON"T KNOW how I ended up with two of them... but this one didn't seem nessessary
 # def load_game_data(filename):
-
-
 #     # Determine if the application is a frozen .exe
 #     if getattr(sys, 'frozen', False):
 #         datadir = os.path.dirname(sys.executable)
 #     else:
 #         datadir = os.path.dirname(__file__)
-
 #     game_data_path = os.path.join(datadir, 'game_data.txt')
 #     weapons_json_path = os.path.join(datadir, 'weapons.json')
 #     requirements_txt_path = os.path.join(datadir, 'requirements.txt')
-
 #     # Make sure to check if the files exist
 #     if not os.path.exists(game_data_path):
 #         raise FileNotFoundError(f"File not found: {game_data_path}")
@@ -174,12 +178,13 @@ player_move = {
     "Go West": (-1, 0)
 }
 adventure_buttons = [
-    {"rect": pygame.Rect(10, 700, 100, 50), "color": BLACK, "text": "Go West"},
-    {"rect": pygame.Rect(230, 700, 100, 50), "color": BLACK, "text": "Go East"},
-    {"rect": pygame.Rect(120, 760, 100, 50), "color": BLACK, "text": "Go South"},
-    {"rect": pygame.Rect(120, 640, 100, 50), "color": BLACK, "text": "Go North"},
-    {"rect": pygame.Rect(120, 700, 100, 50), "color": RED, "text": "Loiter"},
+    {"rect": pygame.Rect(60, 700, 100, 50), "color": BLACK, "text": "Go West"},
+    {"rect": pygame.Rect(280, 700, 100, 50), "color": BLACK, "text": "Go East"},
+    {"rect": pygame.Rect(170, 760, 100, 50), "color": BLACK, "text": "Go South"},
+    {"rect": pygame.Rect(170, 640, 100, 50), "color": BLACK, "text": "Go North"},
+    {"rect": pygame.Rect(170, 700, 100, 50), "color": RED, "text": "Loiter"}
 ]
+
 chop_wood_button = {"rect": pygame.Rect(20, screen_height *.9, 100, 50), "color": BLACK, "text": "Chop Wood"}
 mine_stone_button = {"rect": pygame.Rect(20, screen_height *.9, 100, 50), "color": BLACK, "text": "Chop Wood"}
 
@@ -245,11 +250,15 @@ def custom_print(*args, **kwargs):
 original_print = print
 print = custom_print
 def draw_message_log(screen):
-    y_offset = 4*screen_height /5
+    log_background = pygame.Surface((int(screen_width * 0.5), screen_height /5), pygame.SRCALPHA)
+    log_background.fill((242, 225, 150, 128))
+    screen.blit(log_background, (screen_width*.58, screen_height*.8,))
+    y_offset = screen_height * .96
     for message in message_log:
         message_surface = small_font.render(message, True, BLACK)
-        screen.blit(message_surface, (5*screen_width/6, y_offset))
-        y_offset += 30
+        screen.blit(message_surface, (screen_width* 3/5, y_offset))
+        y_offset -= int(screen_height/35)
+
 def setscreenres(screen_width, screen_height):
     global screen_res 
     screen_res = (screen_width, screen_height)

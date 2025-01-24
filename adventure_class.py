@@ -52,7 +52,7 @@ def determine_enemy(player_pos, terrain, encounter_chance, level):
     
     if encounterable:
         chosen_beast = random.choice(encounterable)
-        print(f"Encountered a {chosen_beast["beastname"]} in the {terrain["type"]}")
+        print(f'Encountered a {chosen_beast["beastname"]} in the {terrain["type"]}')
         return chosen_beast["beastname"]
     else:
         print("No encounters available for this terrain.")
@@ -218,19 +218,21 @@ class Adventure:
 
     def draw_adventure(self, screen, adventure_buttons, visited_grids, player_pos):
         # Draw the adventure screen
+#draw the player
+        adv_player_image = pygame.transform.scale(game_config.player_image, (game_config.screen_width/7, game_config.screen_height/3))
+        player_xy = game_config.screen_width/5, game_config.screen_height/3
+        player_rect = game_config.player_image.get_rect(topleft = player_xy)
+
+#Good down
+
 # Draw the new background
         local_terrain = self.visited_grids[tuple(self.player_pos)]["type"]
         try:
             env_image = visited_grids[tuple(player_pos)]["background"]
-            # print(f'ENV_IMAGE: {env_image}')
-            
-            # Ensure the correct path is used
             image_path = os.path.join("images", "landscape", local_terrain, env_image)
-            # print(f'IMAGE_PATH: {image_path}')
-            
             background_image = pygame.image.load(image_path).convert_alpha()
             game_config.screen.blit(background_image, (0, 0))
-            
+            game_config.screen.blit(adv_player_image, player_rect.topleft)
         except FileNotFoundError as e:
             print(f'FileNotFoundError: {e}')
         except pygame.error as e:
@@ -239,9 +241,7 @@ class Adventure:
             print(f'KeyError: {e}')
         except Exception as e:
             print(f'Unexpected Error: {e}')
-
 #Draw Adventure buttons
-
         loaded_buttons = adventure_buttons
         wood_available = visited_grids[tuple(player_pos)].get("trees",0) 
         if wood_available>0:
@@ -263,10 +263,6 @@ class Adventure:
         #Lumberjack's button
 
 
-
-
-
-#draw the new background
 
     def draw_menu_nav_buttons(self, screen, menu_buttons, mode_flags, mode):
         # print(f'Adventuring: {}')

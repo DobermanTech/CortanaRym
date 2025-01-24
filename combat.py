@@ -1,7 +1,10 @@
 import pygame
 import random
 import game_config
+from game_config import screen_width, screen_height
 import time
+import os
+
 # Beasts
 def custom_print(*args, **kwargs):
     original_print(*args, **kwargs)
@@ -21,17 +24,29 @@ def draw_combat_buttons(screen, combat_buttons):
 
 def draw_combat_hud(screen, player_instance, my_adventure, opponent):
     screen_width = screen.get_width()
+    local_terrain = my_adventure.visited_grids[tuple(my_adventure.player_pos)]["type"]
+    env_image = my_adventure.visited_grids[tuple(my_adventure.player_pos)]["background"]
+    image_path = os.path.join("images", "landscape", local_terrain, env_image)
+    background_image = pygame.image.load(image_path).convert_alpha()
+    game_config.screen.blit(background_image, (0, 0))
 #player
     player_health_ratio = max(player_instance.health / player_instance.maxhealth, 0)  # Ratio of current health to max health
     player_health_bar_width = int(player_health_ratio * game_config.screen_width/3)  # Width of the health bar based on health ratio
     pygame.draw.rect(screen, (0,0,0), (10, 55, (game_config.screen_width/3), 50), 5)  # Draw border around health bar
     pygame.draw.rect(screen, (255, 0, 0), (10, 60, player_health_bar_width, 40))  # Draw player's health bar
+#player "sprite"
+    adv_player_image = pygame.transform.scale(game_config.player_image, (game_config.screen_width/7, game_config.screen_height/3))
+    player_xy = game_config.screen_width/5, game_config.screen_height/3
+    player_rect = game_config.player_image.get_rect(topleft = player_xy)
+    game_config.screen.blit(adv_player_image, player_rect.topleft)
 
 #Opponent
     opponent_health_ratio = max(opponent.health / opponent.maxhealth, 0)  # Ratio of current health to max health for opponent
     opponent_health_bar_width = int(opponent_health_ratio * screen_width /3)  # Width of the opponent health bar
     pygame.draw.rect(screen, (0,0,0), (screen_width *2/3 - 15, 55, screen_width/3 + 10, 50), 5)  # Draw border around opponent's health bar
     pygame.draw.rect(screen, (255, 0, 0), (screen_width * 2/3 -10, 60, opponent_health_bar_width, 40))  # Draw opponent's health bar
+#opponent "sprite"
+
 
 # Optional: Display health text
     font = pygame.font.Font(None, 36)
@@ -39,12 +54,21 @@ def draw_combat_hud(screen, player_instance, my_adventure, opponent):
     screen.blit(player_health_text, (screen_width/9, 75))
     opponent_health_text = font.render(f'{opponent.health}/{opponent.maxhealth}', True, (0,0,0))
     screen.blit(opponent_health_text, (screen_width *2/3, 75))
+    enemy_name = font.render(f'{opponent.name}', True, (255, 255, 250))
+    enemy_name_dshadow = font.render(f'{opponent.name}', True, (0,0,0))
+    screen.blit(enemy_name_dshadow, (screen_width *2/3-2, 32))
+    screen.blit(enemy_name, (screen_width *2/3, 30))
 
 
 
 
 
-def turn_based_combat(player_instance, my_adventure, opponent, current_weapon):
+def turn_based_combat(player_instance, my_adventure, opponent, current_weapon, visited_grids, player_pos):
+    game_config.screen.fill((255,255,255))
+    draw_combat_hud(game_config.screen, player_instance, my_adventure, opponent)
+    game_config.draw_message_log(game_config.screen)
+    # my_adventure.draw_adventure(game_config.screen, game_config.adventure_buttons, my_adventure.visited_grids, my_adventure.player_pos)
+
     if opponent.health > 0 and player_instance.health > 0:
         # print(current_weapon)
         outcome = player_turn(player_instance, my_adventure, opponent, current_weapon)
@@ -58,17 +82,27 @@ def turn_based_combat(player_instance, my_adventure, opponent, current_weapon):
             print("You were defeated!")
             return "Defeat"  # Exit if player is defeated
 
+
+
+
 def player_turn(player_instance, my_adventure, opponent, current_weapon):
     damage = player_instance.attack(current_weapon)
+    icon_xy = (screen_width * 0.85, screen_height * 1.75 / 5)
     if damage != 0:
         print(f'You deal {damage} damage.')
+        damage_display = game_config.BIG_font.render(f'{damage}', True, (game_config.BLACK)) # Red color
+        text_rect = damage_display.get_rect()
+        splat_rect = game_config.hitsplat_image.get_rect(center=icon_xy)
+        game_config.screen.blit(game_config.hitsplat_image, splat_rect.topleft)
+        text_rect.center = splat_rect.center
+        game_config.screen.blit(damage_display, text_rect.topleft)
 
     else:
         print("You missed")
+        damage_display = game_config.BIG_font.render('Miss', True, (game_config.BLACK)) # Red color
+        text_rect = damage_display.get_rect(center = icon_xy)
+        game_config.screen.blit(damage_display, text_rect.topleft)
     opponent.health -= damage
-    game_config.screen.fill((255,255,255))
-    draw_combat_hud(game_config.screen, player_instance, my_adventure, opponent)
-    game_config.draw_message_log(game_config.screen)
     pygame.display.flip()
     time.sleep(.7)
     # print(f'{opponent.name} has {opponent.health} health left.')
@@ -89,10 +123,19 @@ def hostile_turn(player_instance, my_adventure, opponent):
     retort_damage = opponent.attack()
     player_instance.health -= retort_damage
     # print(retort_damage)
+
     game_config.screen.fill(game_config.WHITE)
     draw_combat_hud(game_config.screen, player_instance, my_adventure, opponent)
     game_config.draw_message_log(game_config.screen)
+    damage_display = game_config.BIG_font.render(f'{retort_damage}', True, (game_config.BLACK)) # Red color
+    text_rect = damage_display.get_rect()
+    icon_xy = (screen_width * 0.28, screen_height * 2.1 / 5)
+    splat_rect = game_config.hitsplat_image.get_rect(center=icon_xy)
+    game_config.screen.blit(game_config.hitsplat_image, splat_rect.topleft)
+    text_rect.center = splat_rect.center
+    game_config.screen.blit(damage_display, text_rect.topleft)
     pygame.display.flip()
+
     time.sleep(.7)
 
 

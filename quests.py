@@ -64,5 +64,7 @@ for quest in quests:
 # (and so on for each quest...)
 
 
-
+for beast_key in game_config.beasts_dict:
+    beast = game_config.beasts_dict[beast_key]
+    print(beast["beastname"])
 

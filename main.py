@@ -56,11 +56,14 @@ bagimage_size = (100, 100)  # Define the size to which images will be rescaled
 
 
 def draw_message_log(screen):
-    y_offset = 4*game_config.screen_height /5
+    log_background = pygame.Surface((int(game_config.screen_width * 0.5), game_config.screen_height /5), pygame.SRCALPHA)
+    log_background.fill((242, 225, 150, 128))
+    game_config.screen.blit(log_background, (game_config.screen_width*.58, game_config.screen_height*.8,))
+    y_offset = game_config.screen_height * .96
     for message in game_config.message_log:
         message_surface = game_config.small_font.render(message, True, game_config.BLACK)
-        screen.blit(message_surface, (5*game_config.screen_width/6, y_offset))
-        y_offset += 30
+        screen.blit(message_surface, (game_config.screen_width* 3/5, y_offset))
+        y_offset -= int(game_config.screen_height/35)
 
 def custom_print(*args, **kwargs):
     original_print(*args, **kwargs)
@@ -201,12 +204,13 @@ while running:
                     if button["rect"].collidepoint(event.pos):
                         action = button["text"].lower()
                         if action == "attack":
-                            fight = combat.turn_based_combat(player_instance, my_adventure, opponent, player_instance.current_weapon)
+                            fight = combat.turn_based_combat(player_instance, my_adventure, opponent, player_instance.current_weapon, my_adventure.visited_grids, my_adventure.player_pos)
                             if fight == "victory":
                                 change_mode(Mode.ON_ADVENTURE)
                                 time.sleep(0.5)
                         elif action == "run away":
                             opponent.attack()
+                            time.sleep(0.2)
                             change_mode(Mode.ON_ADVENTURE)
                             print("You flee.")  # Debug print
                             break
