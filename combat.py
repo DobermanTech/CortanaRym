@@ -72,11 +72,16 @@ def turn_based_combat(player_instance, my_adventure, opponent, current_weapon, v
     if opponent.health > 0 and player_instance.health > 0:
         # print(current_weapon)
         outcome = player_turn(player_instance, my_adventure, opponent, current_weapon)
+        game_config.screen.fill((255,255,255))
+        draw_combat_hud(game_config.screen, player_instance, my_adventure, opponent)
+        game_config.draw_message_log(game_config.screen)
+        pygame.display.flip()
         if outcome == "victory":
               return "victory" # End combat if player wins
         effects(player_instance, my_adventure, opponent)
         if opponent.health <= 0:
             return "victory"  # Exit if opponent is defeated
+        game_config.pause(300)
         hostile_turn(player_instance, my_adventure, opponent)
         if player_instance.health <= 0:
             print("You were defeated!")
@@ -88,6 +93,8 @@ def turn_based_combat(player_instance, my_adventure, opponent, current_weapon, v
 def player_turn(player_instance, my_adventure, opponent, current_weapon):
     damage = player_instance.attack(current_weapon)
     icon_xy = (screen_width * 0.85, screen_height * 1.75 / 5)
+    if damage > opponent.health:
+        damage = opponent.health
     if damage != 0:
         print(f'You deal {damage} damage.')
         damage_display = game_config.BIG_font.render(f'{damage}', True, (game_config.BLACK)) # Red color
@@ -104,7 +111,8 @@ def player_turn(player_instance, my_adventure, opponent, current_weapon):
         game_config.screen.blit(damage_display, text_rect.topleft)
     opponent.health -= damage
     pygame.display.flip()
-    time.sleep(.7)
+    # time.sleep(.7)
+    game_config.pause(500)
     # print(f'{opponent.name} has {opponent.health} health left.')
     if opponent.health < 1:
         print(f'You defeated {opponent.name}!')
@@ -136,7 +144,8 @@ def hostile_turn(player_instance, my_adventure, opponent):
     game_config.screen.blit(damage_display, text_rect.topleft)
     pygame.display.flip()
 
-    time.sleep(.7)
+    # time.sleep(.7)
+    game_config.pause(500)
 
 
 class Enemy:

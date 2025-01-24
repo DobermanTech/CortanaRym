@@ -1,7 +1,7 @@
 import pygame
 import os
 import sys
-
+import random
 
 pygame.font.init()
 global screen_height
@@ -29,7 +29,7 @@ forest_photos = 'images/landscape/forest/'
 castle_photos = 'images/landscape/castle/'
 swamp_photos = 'images/landscape/swamp/'
 meadow_photos = 'images/landscape/forest/'
-town_gate_photos = "iamges/landscape/town"
+town_gate_photos = "iamges/landscape/town/"
 damage_hitsplat = "images/damage_hitsplat.png"
 hitsplat_image = pygame.image.load(damage_hitsplat)
 hitsplat_image = pygame.transform.scale(hitsplat_image, (screen_width/11, screen_height/11))
@@ -157,8 +157,13 @@ TERRAINS = {
     "meadow": {"color": (20,200,20)}  # Use color for meadows
     }
 
+towngate_image_list = os.listdir('images/landscape/town/')
+# print(towngate_image_list)
+town_gate_file = random.choice(towngate_image_list)
+town_gate_filename = os.path.basename(town_gate_file)
+
 UNIQUE_LOCATIONS = {
-    (10,10): {"location" : "Town", "color": 'BLACK', "Reputation": 10, "type" : "Town", "background": "swamp 6.png"},
+    (10,10): {"location" : "Town", "color": 'BLACK', "Reputation": 10, "type" : "Town", "background": f'{town_gate_filename}'},
     (3,5): {"location" : "Fort Timble", "type": "Outpost", "color": "BLACK", "Reputation": 10},
     (12,12): {"location": "magic portal", "type": "Secret Mission Objective", "color": (255, 0, 255), "image": "images/map icons/portal.png"}  # Relative path
     }
@@ -186,7 +191,7 @@ adventure_buttons = [
 ]
 
 chop_wood_button = {"rect": pygame.Rect(20, screen_height *.9, 100, 50), "color": BLACK, "text": "Chop Wood"}
-mine_stone_button = {"rect": pygame.Rect(20, screen_height *.9, 100, 50), "color": BLACK, "text": "Chop Wood"}
+mine_stone_button = {"rect": pygame.Rect(20, screen_height *.9, 100, 50), "color": BLACK, "text": "Mine Stone"}
 
 # map_buttons = [
 #     {"rect": pygame.Rect(screen_width -275, screen_height/5, 200, 3*screen_height/5), "color": lighttan, "text": ""},
@@ -264,3 +269,26 @@ def setscreenres(screen_width, screen_height):
     screen_res = (screen_width, screen_height)
 setscreenres(screen_width, screen_height)
 
+def pause(duration):
+    start_time = pygame.time.get_ticks()
+    paused = True
+    while paused:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            # You can add a key to unpause if needed
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_p:
+                paused = False
+
+        current_time = pygame.time.get_ticks()
+        if current_time - start_time >= duration:
+            paused = False
+
+        # # Display "Paused" message
+        # font = pygame.font.Font(None, 74)
+        # text = font.render("Paused", True, (255, 0, 0))
+        # screen.fill((0, 0, 0))  # Clear the screen
+        # screen.blit(text, (screen.get_width() // 2 - text.get_width() // 2,
+        #                    screen.get_height() // 2 - text.get_height() // 2))
+        # pygame.display.flip()

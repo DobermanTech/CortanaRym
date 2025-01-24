@@ -16,10 +16,10 @@ def determine_encounter(terrain, location_events, skills):
         return "no events found"
     
     valid_events = [event for event in events if isinstance(event, tuple) and len(event) == 2]
-    print(valid_events)
+    # print(valid_events)
     if skills["Lumbering"] >0 and terrain == "forest": 
         valid_events.append(('find_trees', 5))
-    print(valid_events)
+    # print(valid_events)
     if not valid_events:
         return "no valid events found"
     
@@ -34,8 +34,6 @@ def custom_print(*args, **kwargs):
     game_config.log_message(message)
 original_print = print
 print = custom_print
-
-
 
 
 
@@ -242,10 +240,10 @@ class Adventure:
         except Exception as e:
             print(f'Unexpected Error: {e}')
 #Draw Adventure buttons
-        loaded_buttons = adventure_buttons
+        loaded_buttons = adventure_buttons.copy()
         wood_available = visited_grids[tuple(player_pos)].get("trees",0) 
         if wood_available>0:
-            # print("I HAS TREES")
+            # print(wood_available)
             loaded_buttons.append(game_config.chop_wood_button)
         for button in loaded_buttons:
             pygame.draw.rect(screen, button["color"], button["rect"])

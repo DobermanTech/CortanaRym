@@ -1,6 +1,6 @@
 # Locations
 "forest": {"color": (200,255,200)},  # Use color for forests
-"crypt": {"color": (0, 0, 255), "image": "images/map icons/crypt.png"},  # Relative path
+"swamp": {"color": (0, 0, 255), "image": "images/map icons/crypt.png"},  # Relative path
 "castle": {"color": (255, 0, 0), "image": "images/map icons/castle.png"},  # Relative path
 "meadow": {"color": (20,200,20)}  # Use color for meadows
 
@@ -17,7 +17,7 @@ meet_traveler: "You see a person approaching..."
 
 # Location Events
 forest: beast_encounter,5;find_weapon,1;find_cave,1
-castle: beast_encounter,5;find_weapon,2
+castle: beast_encounter,5;find_weapon,2;find_treasure,1
 town: overhear_conversation,1;meet_traveler,5
 swamp: beast_encounter,5;find_crypt,1
 meadow: beast_encounter,1;meet_traveler,1;nothing,1
@@ -31,18 +31,18 @@ mystic: "a mysterious mystic who knows ancient secrets."
 bartender: "a friendly bartender who has heard many stories."
 
 # Beasts
-goblin, health: 12, damage: 1-3, xp: 5,  min_level: 0, env: crypt-castle-forest-meadow
-dragon, health: 200, damage: 5-10, xp: 40,  min_level: 2, env: forest-castle-meadow
-rat, health: 5, damage: 0-1, xp: 1,  min_level: 0, env: crypt
-Cave Bat, health: 20, damage: 1-3, xp: 4,  min_level: 0, env: crypt-forest
-Feral Cat, health: 30, damage: 1-4, xp: 6,  min_level: 0, env: castle-forest-meadow
-Forest Sprite, health: 25, damage: 2-5, xp: 7,  min_level: 0, env: forest-meadow
+goblin, health: 12, damage: 1-3, xp: 5,  min_level: 1, env: crypt-castle-forest-meadow
+dragon, health: 200, damage: 5-10, xp: 400,  min_level: 2, env: forest-castle-meadow
+rat, health: 5, damage: 0-1, xp: 1,  min_level: 0, env: crypt-castle
+Cave Bat, health: 20, damage: 1-3, xp: 4,  min_level: 0, env: crypt-forest-castle
+Feral Cat, health: 30, damage: 1-4, xp: 6,  min_level: 1, env: castle-forest-meadow
+Forest Sprite, health: 25, damage: 2-5, xp: 7,  min_level: 1, env: forest-meadow
 Weak Zombie, health: 40, damage: 2-6, xp: 8,  min_level: 0, env: crypt
-Goblin Scout, health: 50, damage: 3-7, xp: 10,  min_level: 0, env: forest-castle-meadow
+Goblin Scout, health: 50, damage: 3-7, xp: 10,  min_level: 2, env: forest-castle-meadow
 Fiery Imp, health: 60, damage: 6-12, xp: 15,  min_level: 2, env: castle
-Poison Spider, health: 70, damage: 6-12, xp: 16,  min_level: 0, env: forest-crypt
-Goblin Shaman, health: 80, damage: 7-15, xp: 20,  min_level: 2, env: crypt
-Acidic Slime, health: 100, damage: 7-15, xp: 20,  min_level: 4, env: crypt
+Poison Spider, health: 70, damage: 6-10, xp: 16,  min_level: 1, env: forest-crypt
+Goblin Shaman, health: 50, damage: 7-20, xp: 20,  min_level: 4, env: crypt-castle
+Acidic Slime, health: 100, damage: 7-10, xp: 20,  min_level: 4, env: crypt
 Witch, health: 90, damage: 9-18, xp: 22,  min_level: 4, env: forest-meadow
 Harpy, health: 90, damage: 9-18, xp: 24,  min_level: 5, env: castle-meadow
 Spectral Ghost, health: 110, damage: 11-23, xp: 26,  min_level: 8, env: crypt

@@ -162,6 +162,7 @@ while running:
         #draw the combat buttons and screen
         combat.draw_combat_hud(screen, player_instance, my_adventure, opponent)
         combat.draw_combat_buttons(screen, game_config.combat_buttons)
+
     if mode_flags[Mode.IN_INN]:
         inn.draw_inn(screen, inn_background_image, player_instance.coinpurse, player_instance.health, player_instance.maxhealth)
     if mode_flags[Mode.IN_HUNTER]:
@@ -201,16 +202,21 @@ while running:
 
             if mode_flags[Mode.IN_COMBAT]:
                 for button in game_config.combat_buttons:
-                    if button["rect"].collidepoint(event.pos):
+                    if button["rect"].collidepoint(event.pos) and can_action:
                         action = button["text"].lower()
-                        if action == "attack":
+                        if action == "attack" and can_action:
+                            can_action = False
                             fight = combat.turn_based_combat(player_instance, my_adventure, opponent, player_instance.current_weapon, my_adventure.visited_grids, my_adventure.player_pos)
+                            # can_action = True
                             if fight == "victory":
                                 change_mode(Mode.ON_ADVENTURE)
-                                time.sleep(0.5)
+                                # time.sleep(0.5)
+                                game_config.pause(50)
                         elif action == "run away":
                             opponent.attack()
-                            time.sleep(0.2)
+                            combat.hostile_turn(player_instance, my_adventure, opponent)
+                            # time.sleep(0.2)
+                            game_config.pause(50)
                             change_mode(Mode.ON_ADVENTURE)
                             print("You flee.")  # Debug print
                             break
@@ -227,7 +233,7 @@ while running:
                             print(loiter_result)
                             if loiter_result == "find_trees":
                                 my_adventure.visited_grids[tuple(my_adventure.player_pos)]["trees"] = 5
-                                print(my_adventure.visited_grids[tuple(my_adventure.player_pos)])
+                                # print(my_adventure.visited_grids[tuple(my_adventure.player_pos)])
                                 
                             if loiter_result == "beast_encounter":
                                 encounter = adventure_class.determine_enemy(my_adventure.player_pos, my_adventure.visited_grids[tuple(my_adventure.player_pos)], encounter_chance, player_instance.level)                           
@@ -239,6 +245,46 @@ while running:
                             if loiter_result == "find_weapon":
                                 new_weapon = weapon_class.Weapon.create_random_weapon(weapon_dict, player_instance.level)
                                 acquire_weapon(new_weapon)
+                                weapontext_surface = game_config.BIG_font.render(f'Found a {new_weapon.name}', True, game_config.GREEN)
+                                weapontext_rect = weapontext_surface.get_rect(center=(game_config.screen_width / 2, game_config.screen_height / 2))
+
+                                move_up_distance = 100  # Distance to move up
+                                animation_ticks = 30  # Duration of the animation in ticks
+                                tick_count = 0  # Counter for ticks
+                                # Update the treasure text position
+                                while tick_count < animation_ticks:
+                                    screen.fill((255,255,255))
+                                    my_adventure.draw_adventure(screen, game_config.adventure_buttons, my_adventure.visited_grids, my_adventure.player_pos)
+                                    # Calculate the current offset based on tick count and move up distance
+                                    offset = (move_up_distance / animation_ticks) * tick_count
+                                    weapontext_rect.centery = (game_config.screen_height / 2) - offset
+                                    screen.blit(weapontext_surface, weapontext_rect)
+                                    pygame.display.flip()                             
+                                    tick_count += 1
+
+
+
+                            if loiter_result == "find_treasure":
+                                treasure_money = random.randint(2,10) *player_instance.level
+                                player_instance.coinpurse += treasure_money
+                                treasure_surface = game_config.BIG_font.render(f'+{treasure_money} Gold', True, game_config.GREEN)
+                                treasure_rect = treasure_surface.get_rect(center=(game_config.screen_width / 2, game_config.screen_height / 2))
+                                screen.blit(treasure_surface, treasure_rect)
+                                move_up_distance = 100  # Distance to move up
+                                animation_ticks = 30  # Duration of the animation in ticks
+                                tick_count = 0  # Counter for ticks
+                                # Update the treasure text position
+                                while tick_count < animation_ticks:
+                                    screen.fill((255,255,255))
+                                    my_adventure.draw_adventure(screen, game_config.adventure_buttons, my_adventure.visited_grids, my_adventure.player_pos)
+                                    # Calculate the current offset based on tick count and move up distance
+                                    offset = (move_up_distance / animation_ticks) * tick_count
+                                    treasure_rect.centery = (game_config.screen_height / 2) - offset
+                                    screen.blit(treasure_surface, treasure_rect)
+                                    pygame.display.flip()
+                                    tick_count += 1
+
+
                         elif button["text"] == "Back to Town":                                
                             location = "Town"
                             on_adventure = False
@@ -259,7 +305,25 @@ while running:
                             new_y+= dy                           
                             my_adventure.player_pos = my_adventure.movement(my_adventure.player_pos, new_x, new_y)
                             # print(my_adventure.player_pos)
-  
+                
+                if game_config.chop_wood_button["rect"].collidepoint(event.pos):
+                    print("chopping")
+                    if my_adventure.visited_grids[tuple(my_adventure.player_pos)]["trees"] > 0:
+                        player_instance.wood +=1
+                        print(player_instance.wood)
+                        my_adventure.visited_grids[tuple(my_adventure.player_pos)]["trees"] -= 1
+                    # loiter_result = "beast_encounter"
+                        game_config.pause(100)
+                        get_ambushed = True if 1 == random.randint(1,2) else False
+                        if get_ambushed:
+                            encounter = adventure_class.determine_enemy(my_adventure.player_pos, my_adventure.visited_grids[tuple(my_adventure.player_pos)], encounter_chance, player_instance.level)                           
+                            if encounter is not None:
+                                mode_flags = set_mode(current_mode, Mode.IN_COMBAT)
+                                enemy_data = game_config.beasts_dict[encounter]
+                                opponent = combat.Enemy(enemy_data["beastname"], enemy_data)
+
+
+
             if mode_flags[Mode.IN_BLACKSMITH]:
                 for button in blacksmith.blacksmith_buttons:
                     if button["rect"].collidepoint(event.pos):
@@ -354,5 +418,6 @@ while running:
     draw_message_log(screen)
     # print("current mode:", mode_flags)
     pygame.display.flip()
+    can_action = True
 print("End of Main Loop")    
 pygame.quit()

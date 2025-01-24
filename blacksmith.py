@@ -117,7 +117,7 @@ def sell_weapon(self, weapon):
     popup_box = pygame.Surface((screen_width/2, screen_height/2), pygame.SRCALPHA)
     popup_box.fill((242, 225, 150, 192))  # RGBA, with alpha set to 128 (semi-transparent)
     game_config.screen.blit(popup_box, (screen_width*.25, screen_height*.25,))
-    if weapon.value < 10:
+    if weapon.value < 1000:
         # offer value only
         options_text = game_config.font.render(f"Your {weapon.name} isn't worth much. I'll give you {weapon.value} for it.", True, (game_config.BLACK))
         selecting = True

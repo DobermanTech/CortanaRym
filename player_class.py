@@ -12,6 +12,8 @@ class Player:
         self.exp_to_next_level = self.calculate_exp_to_next_level()
         self.maxhealth = 100 + (5 * self.level)
         self.coinpurse = 50
+        self.wood = 0
+        self.stone = 0
 
         # Define the default weapon name
         default_weapon_name = 'fists'
@@ -43,12 +45,12 @@ class Player:
             "Leadership":0
         }
         self.skill_xp = {
-            "Long Blade": 0,
+            "Long Blade": 6,
             "Short Blade": 0,
-            "Choppers": 0,
-            "Polearms": 0,
-            "Ranged": 0,
-            "Blunt": 0
+            "Choppers": 1,
+            "Polearms": 4,
+            "Ranged": 9,
+            "Blunt": 14
         }
 
     def add_skill_xp(self, skill, xp_amount):
@@ -58,7 +60,7 @@ class Player:
         self.skill_xp[skill] += xp_amount  # Add XP to the skill
         current_level = self.skills[skill]  # Get current level of the skill
         next_level = current_level + 1  # Calculate the next level
-        xp_threshold = current_level ** 1.5 * 20 
+        xp_threshold = current_level **(1+(current_level*.02)) *35
         # Check if XP is enough for the next level
         if self.skill_xp[skill] >= xp_threshold:
             self.skills[skill] = next_level  # Level up the skill
@@ -84,6 +86,7 @@ class Player:
         while self.exp >= self.exp_to_next_level:
             self.exp -= self.exp_to_next_level
             self.level += 1
+            self.maxhealth +=5
             self.exp_to_next_level = self.calculate_exp_to_next_level()
             print(f"Level up! {self.name} is now level {self.level}!")
         else:
@@ -117,6 +120,7 @@ class Player:
         
         box_width = screen_width * 0.1875 - 20  # Fixed width for each box
         box_height = 80  # Fixed height for each box
+        progress_bar_height = 10  # Height of the progress bar
         
         for skill, level in self.skills.items():
             text = game_config.font.render(f"{skill}: {level}", True, game_config.BLACK)
@@ -125,11 +129,21 @@ class Player:
             
             pygame.draw.rect(screen, game_config.WHITE, box_rect)  # Draw the fixed size box
             screen.blit(text, text_rect)  # Blit the text in the center of the box
-            
+            current_xp = self.skill_xp.get(skill, 0) # Calculate progress
+            xp_to_next_level = (self.skills[skill] ** 1.5) * 20
+            progress = current_xp / xp_to_next_level if xp_to_next_level > 0 else 0
+            progress_bar_rect = pygame.Rect(        # Draw progress bar
+                x_offset,
+                y_offset + box_height + 5,
+                int(box_width * progress),
+                progress_bar_height
+            )
+            pygame.draw.rect(screen, game_config.BLACK, (x_offset, y_offset + box_height + 5, box_width, progress_bar_height))  # Background bar
+            pygame.draw.rect(screen, game_config.GREEN, progress_bar_rect)  # Progress bar
             x_offset += box_width + 20  # Move to the next box position
             x_pos += 1
             if x_pos >= 4:
-                y_offset += box_height + 20  # Move to the next row
+                y_offset += box_height + 30  # Move to the next row, adjust spacing for progress bar
                 x_offset = screen_width / 4
                 x_pos = 1
 
@@ -137,3 +151,25 @@ class Player:
 # You can also use setattr
 #setattr(player, 'experience', 0)
 
+###test
+player = Player('Adventurer', {'fists': {'hitChance': 70, 'min_damage': 1, 'max_damage': 3, 'weapon_type': 'blunt', 'value':0, 'min_level':0}})
+
+skill =player.skills['Blunt']
+# print(f'Weapon Skill:{skill}, Xp Required: {skill **1.5 *20}')
+total_xp=0
+total_hits = 0
+prev_hits = 0
+for x in range(50):
+    xp = int(skill **(1+(skill*.02)) *50)
+    xp_per_hit = 6 + skill
+    hits_to_level = int(xp/xp_per_hit)
+    more_hits = hits_to_level-prev_hits
+    prev_hits = hits_to_level
+    if skill in (1,2,5, 10,20,30,40,50):
+        print(f'Skill Level:{skill}:   {total_xp} xp. {xp} to next. {hits_to_level} hits to Level, {more_hits} more. {total_hits} total hits')
+    total_hits +=hits_to_level
+    total_xp +=xp
+
+    skill +=1
+
+print(player.current_weapon.min_damage)
