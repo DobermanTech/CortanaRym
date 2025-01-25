@@ -1,31 +1,26 @@
-
-#Modules
-import os
-import pygame
-pygame.init()
-pygame.font.init()
-import random
-from random import randint
-import time
+import game_config
+from game_config import pygame, random, copy, pickle
 from enum import Enum, auto
 
 ##  MY Scripts
-import game_config
 game_config.initalize_screen()
 from game_config import screen
 import blacksmith
 import json
 import weapon_class
+from weapon_class import Weapon
 from weapon_bag import draw_weapon_bag
 import adventure_class
 import player_class
 import combat
 import inn
 import hunter
- 
-game_config.check_and_install_packages()
+
+#this one does stuff
+import onlaunch
+
+
 clock = pygame.time.Clock()
-pygame.display.set_caption('CortanaRym V 0.4')
 weapon_counter = 0
 running = True
 weapons_found = 0
@@ -121,9 +116,22 @@ def acquire_weapon(Weapon):
     #print(f'{new_weapon.name} was aquired')
 
 #def make it magical
+player = player_class.Player("Hero", weapon_dict )
+start_adventure = adventure_class.Adventure(game_config.screen_width, game_config.screen_height)
+try:
+    game_config.load_game(player, start_adventure, player_weapon_bag, "game save.txt")
+except:
+    print('error loading game file')
+if onlaunch.load == False:
+    player_instance = copy.deepcopy(player)
+    my_adventure = copy.deepcopy(start_adventure)
+else:
+    player_instance = onlaunch.player_instance
+    my_adventure = onlaunch.my_adventure
+    player_weapon_bag = onlaunch.player_weapon_bag
 
-player_instance = player_class.Player("Hero", weapon_dict )  # Create a Player instance
-my_adventure = adventure_class.Adventure(game_config.screen_width, game_config.screen_height)
+# player_instance = player_class.Player("Hero", weapon_dict )  # Create a Player instance
+# my_adventure = adventure_class.Adventure(game_config.screen_width, game_config.screen_height)
 adventure_class.load_map_images(game_config.TERRAINS, game_config.UNIQUE_LOCATIONS)
 adventure_class.update_location(my_adventure.player_pos, my_adventure.visited_grids, game_config.UNIQUE_LOCATIONS)
 
@@ -140,22 +148,20 @@ while running:
 ################   MODE DRAWS   ##############
 ################   MODE DRAWS   ##############
 ################   MODE DRAWS   ##############
-    if mode_flags[Mode.IN_MAP]:
-        adventure_class.draw_map(my_adventure.player_pos, my_adventure.visited_grids, screen, game_config.screen_width, game_config.screen_height, game_config.GRID_SIZE, game_config.TERRAINS, game_config.UNIQUE_LOCATIONS)
-        my_adventure.draw_menu_nav_buttons(screen, game_config.menu_buttons, mode_flags, Mode)
-        # print("looking at your map")
-    if mode_flags[Mode.IN_BLACKSMITH]:
-        blacksmith.draw_blacksmith(screen)
-        # print("shopping")
+
     if mode_flags[Mode.ON_ADVENTURE]:
         my_adventure.draw_adventure(screen, game_config.adventure_buttons, my_adventure.visited_grids, my_adventure.player_pos)
         my_adventure.draw_menu_nav_buttons(screen, game_config.menu_buttons, mode_flags, Mode)
+
+
     if mode_flags[Mode.SHOW_SKILLS]:
         player_instance.draw_player_stats(screen, game_config.screen_width, game_config.screen_height)
         my_adventure.draw_menu_nav_buttons(screen, game_config.menu_buttons, mode_flags, Mode)
-        # print("reflecting on your skills")
     if mode_flags[Mode.IN_WEAPON_BAG]:
         weapon_positions, images, = draw_weapon_bag(player_weapon_bag, screen, bagimage_size, weapon_dict, player_instance)
+        my_adventure.draw_menu_nav_buttons(screen, game_config.menu_buttons, mode_flags, Mode)
+    if mode_flags[Mode.IN_MAP]:
+        adventure_class.draw_map(my_adventure.player_pos, my_adventure.visited_grids, screen, game_config.screen_width, game_config.screen_height, game_config.GRID_SIZE, game_config.TERRAINS, game_config.UNIQUE_LOCATIONS)
         my_adventure.draw_menu_nav_buttons(screen, game_config.menu_buttons, mode_flags, Mode)
 
     if mode_flags[Mode.IN_COMBAT]:
@@ -163,13 +169,16 @@ while running:
         combat.draw_combat_hud(screen, player_instance, my_adventure, opponent)
         combat.draw_combat_buttons(screen, game_config.combat_buttons)
 
+    if mode_flags[Mode.IN_TOWN]:       
+        inn.draw_town(screen, town_background_image)
+
     if mode_flags[Mode.IN_INN]:
         inn.draw_inn(screen, inn_background_image, player_instance.coinpurse, player_instance.health, player_instance.maxhealth)
     if mode_flags[Mode.IN_HUNTER]:
         hunter.draw_hunter(screen, hunter_background_image, player_instance.coinpurse, player_instance.health, player_instance.maxhealth)
-    
-    if mode_flags[Mode.IN_TOWN]:
-        inn.draw_town(screen, town_background_image)
+    if mode_flags[Mode.IN_BLACKSMITH]:
+        blacksmith.draw_blacksmith(screen)
+
     if mode_flags[Mode.PRESENT_WEAPON]:
         weapon_positions, images, = draw_weapon_bag(player_weapon_bag, screen, bagimage_size, weapon_dict, player_instance)
     for event in pygame.event.get():
@@ -210,12 +219,10 @@ while running:
                             # can_action = True
                             if fight == "victory":
                                 change_mode(Mode.ON_ADVENTURE)
-                                # time.sleep(0.5)
                                 game_config.pause(50)
                         elif action == "run away":
                             opponent.attack()
                             combat.hostile_turn(player_instance, my_adventure, opponent)
-                            # time.sleep(0.2)
                             game_config.pause(50)
                             change_mode(Mode.ON_ADVENTURE)
                             print("You flee.")  # Debug print
@@ -242,12 +249,12 @@ while running:
                                     enemy_data = game_config.beasts_dict[encounter]
                                     opponent = combat.Enemy(enemy_data["beastname"], enemy_data)
                                     # print(f'Encounter rolled: you have a {player_instance.current_weapon} equipped.')
+                           
                             if loiter_result == "find_weapon":
                                 new_weapon = weapon_class.Weapon.create_random_weapon(weapon_dict, player_instance.level)
                                 acquire_weapon(new_weapon)
                                 weapontext_surface = game_config.BIG_font.render(f'Found a {new_weapon.name}', True, game_config.GREEN)
                                 weapontext_rect = weapontext_surface.get_rect(center=(game_config.screen_width / 2, game_config.screen_height / 2))
-
                                 move_up_distance = 100  # Distance to move up
                                 animation_ticks = 30  # Duration of the animation in ticks
                                 tick_count = 0  # Counter for ticks
@@ -283,8 +290,7 @@ while running:
                                     screen.blit(treasure_surface, treasure_rect)
                                     pygame.display.flip()
                                     tick_count += 1
-
-
+                        #
                         elif button["text"] == "Back to Town":                                
                             location = "Town"
                             on_adventure = False
@@ -309,18 +315,15 @@ while running:
                 if game_config.chop_wood_button["rect"].collidepoint(event.pos):
                     print("chopping")
                     if my_adventure.visited_grids[tuple(my_adventure.player_pos)]["trees"] > 0:
-                        player_instance.wood +=1
-                        print(player_instance.wood)
+                        ambush = player_instance.chopwood(my_adventure.visited_grids[tuple(my_adventure.player_pos)]["trees"])
                         my_adventure.visited_grids[tuple(my_adventure.player_pos)]["trees"] -= 1
-                    # loiter_result = "beast_encounter"
-                        game_config.pause(100)
-                        get_ambushed = True if 1 == random.randint(1,2) else False
-                        if get_ambushed:
+                        if ambush:
                             encounter = adventure_class.determine_enemy(my_adventure.player_pos, my_adventure.visited_grids[tuple(my_adventure.player_pos)], encounter_chance, player_instance.level)                           
                             if encounter is not None:
                                 mode_flags = set_mode(current_mode, Mode.IN_COMBAT)
                                 enemy_data = game_config.beasts_dict[encounter]
                                 opponent = combat.Enemy(enemy_data["beastname"], enemy_data)
+
 
 
 
@@ -370,12 +373,15 @@ while running:
                             player_instance.health += int((player_instance.maxhealth -player_instance.health)/2) + 5
                             if player_instance.health>player_instance.maxhealth:
                                 player_instance.health = player_instance.maxhealth
+                            # save_game(player_instance, my_adventure, player_weapon_bag, 'savegame.json')
+                            game_config.save_game(player_instance, my_adventure, player_weapon_bag, 'savegame.pkl')
+
             if mode_flags[Mode.IN_TOWN]:
                 for button in inn.town_buttons:
                     if button["rect"].collidepoint(event.pos):
                         action = button["text"].lower()
-                        print(action)
-                        if action == "leave":
+                        # print(action)
+                        if action == "leave town":
                             mode_flags = set_mode(current_mode, Mode.ON_ADVENTURE)    
                         if action == "blacksmith":
                             mode_flags = set_mode(current_mode, Mode.IN_BLACKSMITH)
@@ -385,6 +391,18 @@ while running:
                         if action == "hunter's guild":
                             hunter_background_image = hunter.choose_hunter_background()
                             change_mode(Mode.IN_HUNTER)
+                            print("---Hunter's Lodge----Coming soon---")
+                        if action == "guild workshop":
+                            player_instance.coinpurse += player_instance.timber
+                            print(f'Sold Timber for {player_instance.timber} Gold')
+                            player_instance.timber = 0
+                        if action == "mage's guild":
+                            print("---Mage's Guild----Coming soon---")
+                        if action == "save game":
+                            game_config.save_game(player_instance, my_adventure, player_weapon_bag, 'savegame.pkl')
+                            print('Game Saved')
+                        if action == "quit game":
+                            pygame.quit()
             if mode_flags[Mode.IN_HUNTER]:
                 for button in inn.inn_buttons:
                     if button["rect"].collidepoint(event.pos):
@@ -408,11 +426,13 @@ while running:
         for weapon_name, weapon_obj in unique_weapons.items():
             print(f'{weapon_obj.name} : {weapon_obj.min_damage} - {weapon_obj.max_damage} raw Damage per hit')
     if recent_keys[pygame.K_l]:
-        print(player_instance.current_weapon)
+        print(player_weapon_bag)
  
     if recent_keys[pygame.K_j]:
-        print(my_adventure.visited_grids)
-
+        loaded_player, loaded_adventure, loaded_player_weapon_bag = game_config.load_game('savegame.pkl')
+        player_instance = loaded_player
+        my_adventure = loaded_adventure
+        player_weapon_bag = loaded_player_weapon_bag
 
     
     draw_message_log(screen)

@@ -1,0 +1,55 @@
+{
+    "player": {
+        "name": "Hero",
+        "health": 105,
+        "level": 1,
+        "exp": 0,
+        "exp_to_next_level": 10,
+        "maxhealth": 105,
+        "coinpurse": 40,
+        "wood": 0,
+        "stone": 0,
+        "current_weapon": {
+            "name": "fists",
+            "adjective": null,
+            "weapon_type": "blunt",
+            "hitChance": 50,
+            "min_damage": 1,
+            "max_damage": 3,
+            "value": 0,
+            "min_level": 0,
+            "carry_weight": 0,
+            "extra_attribute": "blunt"
+        },
+        "skills": {
+            "Long Blade": 1,
+            "Short Blade": 1,
+            "Choppers": 1,
+            "Polearms": 1,
+            "Ranged": 1,
+            "Blunt": 1,
+            "Tracker": 0,
+            "Scout": 0,
+            "Lumbering": 2,
+            "Mining": 0,
+            "Builder": 0,
+            "Gathering": 0,
+            "Treasure Hunter": 0,
+            "Leadership": 0
+        },
+        "skill_xp": {
+            "Long Blade": 6,
+            "Short Blade": 0,
+            "Choppers": 1,
+            "Polearms": 4,
+            "Ranged": 9,
+            "Blunt": 14
+        }
+    },
+    "adventure": {
+        "player_pos": [
+            10,
+            10
+        ],
+        "visited_grids": {
+            

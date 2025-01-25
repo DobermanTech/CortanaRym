@@ -194,7 +194,7 @@ class Adventure:
         else:()
            # print(f'You have {self.exp_to_next_level} exp to next level')
     
-    def display_status(self):
+    def display_status(self):#UNUSED
         print(f"{self.name} - Level: {self.level}, XP: {self.exp}/{self.exp_to_next_level}")
     # def attack(self, current_weapon):
     #     game_config.custom_print("You chose to attack!")  # Debug print
@@ -209,7 +209,7 @@ class Adventure:
     #     else:
     #         print("You missed the target!")
     #         return 0
-        
+        pass
 
     def draw_adventure(self, screen, adventure_buttons, visited_grids, player_pos):
 
@@ -282,7 +282,8 @@ class Adventure:
             screen.blit(text_surface, text_rect)
             #print(button["text"])
 
-
+    def to_dict(self):
+        return self.__dict__
 
 
 def draw_map(player_pos, visited_grids, screen, screen_width, screen_height, GRID_SIZE, TERRAINS, UNIQUE_TERRAINS):

@@ -2,7 +2,13 @@ import pygame
 import os
 import sys
 import random
-
+from random import randint
+import time
+from enum import Enum, auto
+import copy
+import pickle
+import json
+pygame.init()
 pygame.font.init()
 global screen_height
 global screen_width
@@ -68,29 +74,25 @@ def check_and_install_packages(requirements_file='requirements.txt'):
             install_package(package)   # Install the package if not installed
             print(f'installing{package}')
 
+def save_game(player, adventure, player_weapon_bag, filename):
+    game_state = {
+        'player': player,
+        'adventure': adventure,
+        'player_weapon_bag': player_weapon_bag
+    }
+    with open(filename, 'wb') as file:
+        pickle.dump(game_state, file)
 
+def load_game(filename):
+    with open(filename, 'rb') as file:
+        game_state = pickle.load(file)
+    
+    player = game_state['player']
+    adventure = game_state['adventure']
+    player_weapon_bag = game_state['player_weapon_bag']
+    
+    return player, adventure, player_weapon_bag
 
-#I DON"T KNOW how I ended up with two of them... but this one didn't seem nessessary
-# def load_game_data(filename):
-#     # Determine if the application is a frozen .exe
-#     if getattr(sys, 'frozen', False):
-#         datadir = os.path.dirname(sys.executable)
-#     else:
-#         datadir = os.path.dirname(__file__)
-#     game_data_path = os.path.join(datadir, 'game_data.txt')
-#     weapons_json_path = os.path.join(datadir, 'weapons.json')
-#     requirements_txt_path = os.path.join(datadir, 'requirements.txt')
-#     # Make sure to check if the files exist
-#     if not os.path.exists(game_data_path):
-#         raise FileNotFoundError(f"File not found: {game_data_path}")
-#     if not os.path.exists(weapons_json_path):
-#         raise FileNotFoundError(f"File not found: {weapons_json_path}")
-#     if not os.path.exists(requirements_txt_path):
-#         raise FileNotFoundError(f"File not found: {requirements_txt_path}")
-
-
-
-import re
 
 def load_game_data(filename):
     data = {}

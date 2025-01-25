@@ -104,14 +104,20 @@ inn_rect = pygame.Rect((screen_width/4), 300, screen_width/5, 50)
 blacksmith_rect = pygame.Rect((screen_width/5 *3 ), 300, screen_width/5, 50)
 hunters_rect = pygame.Rect((screen_width/4), 450, screen_width/5, 50)
 mages_rect = pygame.Rect((screen_width/5 *3), 450, screen_width/5, 50)
-leave_rect = pygame.Rect((screen_width/4), 600, screen_width/5, 50)
-
+workshop_rect = pygame.Rect((screen_width/4), 600, screen_width/5, 50)
+leave_rect = pygame.Rect((screen_width/5*3), 600, screen_width/5, 50)
+save_rect = pygame.Rect((screen_width/4), 750, screen_width/5, 50)
+quit_rect = pygame.Rect((screen_width/5*3), 750, screen_width/5, 50)
 town_buttons = [
     {"rect": inn_rect, "text": "Inn"},
     {"rect": blacksmith_rect, "text": "Blacksmith"},
     {"rect": hunters_rect, "text": "Hunter's Guild"},
     {"rect": mages_rect, "text": "Mage's Guild"},
-    {"rect": leave_rect, "text": "Leave"}
+    {"rect": mages_rect, "text": "Mage's Guild"},
+    {"rect": workshop_rect, "text": "Guild Workshop"},
+    {"rect": leave_rect, "text": "Leave Town"},
+    {"rect": save_rect, "text": "Save Game"},
+    {"rect": quit_rect, "text": "Quit Game"}
 ]
 
 def choose_town_background():

@@ -13,6 +13,9 @@ class Player:
         self.maxhealth = 100 + (5 * self.level)
         self.coinpurse = 50
         self.wood = 0
+        self.timber = 0
+        self.lumber = 0
+        self.planks = 0
         self.stone = 0
 
         # Define the default weapon name
@@ -70,6 +73,28 @@ class Player:
         else:
             print(f"{xp_amount} XP added to {skill}. Current level: {current_level}.")
 
+    def chopwood(self, trees):
+        harvested_timber = 0
+        if trees > 0:
+            harvest_oppurtunities = int(1 + (self.skills["Lumbering"]/10) *10)
+            #for every harvest opp    (skill + 25 > 1-100  
+            for _ in range(harvest_oppurtunities):
+                if random.randint(1,100) < (self.skills["Lumbering"] + 25):
+                    self.timber +=1
+                    harvested_timber +=1
+            print(f'Got {harvested_timber} from a tree')
+            trees -= 1
+        # loiter_result = "beast_encounter"
+            game_config.pause(100)
+            get_ambushed = True if 1 == random.randint(1,2) else False
+            if get_ambushed:
+                return get_ambushed
+
+
+
+
+    def to_dict(self):
+        return self.__dict__
 
 
 
@@ -123,7 +148,7 @@ class Player:
         x_offset = screen_width / 4
         x_pos = 1
         
-        box_width = screen_width * 0.1875 - 20  # Fixed width for each box
+        box_width = screen_width * 0.14 - 20  # Fixed width for each box
         box_height = 80  # Fixed height for each box
         progress_bar_height = 10  # Height of the progress bar
         
@@ -157,24 +182,24 @@ class Player:
 #setattr(player, 'experience', 0)
 
 ###test
-player = Player('Adventurer', {'fists': {'hitChance': 70, 'min_damage': 1, 'max_damage': 3, 'weapon_type': 'blunt', 'value':0, 'min_level':0}})
+# player = Player('Adventurer', {'fists': {'hitChance': 70, 'min_damage': 1, 'max_damage': 3, 'weapon_type': 'blunt', 'value':0, 'min_level':0}})
 
-skill =player.skills['Blunt']
-# print(f'Weapon Skill:{skill}, Xp Required: {skill **1.5 *20}')
-total_xp=0
-total_hits = 0
-prev_hits = 0
-for x in range(50):
-    xp = int(skill **(1+(skill*.02)) *50)
-    xp_per_hit = 6 + skill
-    hits_to_level = int(xp/xp_per_hit)
-    more_hits = hits_to_level-prev_hits
-    prev_hits = hits_to_level
-    if skill in (1,2,5, 10,20,30,40,50):
-        print(f'Skill Level:{skill}:   {total_xp} xp. {xp} to next. {hits_to_level} hits to Level, {more_hits} more. {total_hits} total hits')
-    total_hits +=hits_to_level
-    total_xp +=xp
+# skill =player.skills['Blunt']
+# # print(f'Weapon Skill:{skill}, Xp Required: {skill **1.5 *20}')
+# total_xp=0
+# total_hits = 0
+# prev_hits = 0
+# for x in range(50):
+#     xp = int(skill **(1+(skill*.02)) *50)
+#     xp_per_hit = 6 + skill
+#     hits_to_level = int(xp/xp_per_hit)
+#     more_hits = hits_to_level-prev_hits
+#     prev_hits = hits_to_level
+#     if skill in (1,2,5, 10,20,30,40,50):
+#         print(f'Skill Level:{skill}:   {total_xp} xp. {xp} to next. {hits_to_level} hits to Level, {more_hits} more. {total_hits} total hits')
+#     total_hits +=hits_to_level
+#     total_xp +=xp
 
-    skill +=1
+#     skill +=1
 
-print(player.current_weapon.min_damage)
+# print(player.current_weapon.min_damage)

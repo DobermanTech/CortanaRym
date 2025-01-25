@@ -60,3 +60,32 @@ class Weapon:
             weapon_data.get('carry_weight', 0),
             weapon_data['weapon_type']
         )
+
+    def to_dict(self):
+        return {
+            'name': self.name,
+            'adjective': self.adjective,
+            'weapon_type': self.weapon_type,
+            'hitChance': self.hitChance,  # Correct parameter
+            'min_damage': self.min_damage,
+            'max_damage': self.max_damage,
+            'value': self.value,
+            'min_level': self.min_level,
+            'carry_weight': self.carry_weight,
+            'extra_attribute': self.extra_attribute
+        }
+
+    @classmethod
+    def from_dict(cls, data):
+        return cls(
+            name=data.get('name', 'unknown'),
+            adjective=data.get('adjective', None),
+            weapon_type=data.get('weapon_type', 'unknown'),
+            hitChance=data['hitChance'],  # Correct parameter
+            min_damage=data['min_damage'],
+            max_damage=data['max_damage'],
+            value=data['value'],
+            min_level=data['min_level'],
+            carry_weight=data.get('carry_weight', 0),
+            extra_attribute=data.get('extra_attribute', None)
+        )
